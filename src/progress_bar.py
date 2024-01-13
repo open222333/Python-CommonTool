@@ -67,7 +67,7 @@ class ProgressBar(Bar):
             if self.done_num >= total:
                 self.done_num = total
             if detail:
-                bar = self.print_progress_bar(self.done_num, total, decimal)
+                bar = self.print_progress_bar(self.done_num, total, decimal, detail)
             else:
                 bar = self.print_progress_bar(self.done_num, total, decimal)
             sys.stdout.write(bar)
