@@ -27,7 +27,7 @@ class Bar():
         """
         self.title = title
 
-    def print_progress_bar(self, done: int, total: int, decimal: int):
+    def print_progress_bar(self, done: int, total: int, decimal: int, detail: str = ''):
         """繪製 進度表
 
         Args:
@@ -41,7 +41,7 @@ class Bar():
         left = self.symbol * done_symbol
         right = ' ' * (self.bar_size - done_symbol)
         # 顯示進度條
-        bar = f"\r{self.title}:[{left}{right}] {format(precent, f'.{decimal}f')}% {done}/{total}"
+        bar = f"\r{self.title}:[{left}{right}] {format(precent, f'.{decimal}f')}% {done}/{total} {detail}"
         return bar
 
     def __done(self):
@@ -53,7 +53,7 @@ class ProgressBar(Bar):
     def __init__(self, symbol: str = '=', bar_size: int = 50, **kwargs) -> None:
         super().__init__(symbol, bar_size, **kwargs)
 
-    def __call__(self, total: int, done: int = 1, decimal: int = 1, in_loop: bool = False):
+    def __call__(self, total: int, done: int = 1, decimal: int = 1, in_loop: bool = False, detail: str = None):
         """呼叫進度表
 
         Args:
@@ -66,7 +66,10 @@ class ProgressBar(Bar):
             self.done += done
             if self.done >= total:
                 self.done = total
-            bar = self.print_progress_bar(self.done, total, decimal)
+            if detail:
+                bar = self.print_progress_bar(self.done, total, decimal)
+            else:
+                bar = self.print_progress_bar(self.done, total, decimal)
             sys.stdout.write(bar)
             sys.stdout.flush()
             if self.done == total:
