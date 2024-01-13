@@ -3,6 +3,8 @@ import sys
 
 class Bar():
 
+    detail_ljust_len = 80  # 進度條 填空長度
+
     def __init__(self, symbol: str = '=', bar_size: int = 50, **kwargs) -> None:
         """進度條
 
@@ -27,13 +29,14 @@ class Bar():
         """
         self.title = title
 
-    def print_progress_bar(self, done: int, total: int, decimal: int, detail: str = '', detail_ljust_len: int = 30):
+    def print_progress_bar(self, done: int, total: int, decimal: int, detail: str = ''):
         """繪製 進度表
 
         Args:
             done (int): 已完成數
             total (int): 總任務數
             decimal (int): 百分比顯示到後面幾位
+            detail (str): 細節內容
         """
         # 計算百分比
         precent = float(round(100 * done / total, decimal))
@@ -41,7 +44,7 @@ class Bar():
         left = self.symbol * done_symbol
         right = ' ' * (self.bar_size - done_symbol)
         # 顯示進度條
-        bar = f"\r{self.title}:[{left}{right}] {format(precent, f'.{decimal}f')}% {done}/{total} {detail.ljust(detail_ljust_len, ' ')}"
+        bar = f"\r{self.title}:[{left}{right}] {format(precent, f'.{decimal}f')}% {done}/{total} {detail.ljust(self.detail_ljust_len)}"
         return bar
 
     def done(self):
