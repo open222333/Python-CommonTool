@@ -27,7 +27,7 @@ class Bar():
         """
         self.title = title
 
-    def print_progress_bar(self, done: int, total: int, decimal: int, detail: str = ''):
+    def print_progress_bar(self, done: int, total: int, decimal: int, detail: str = '', detail_ljust_len: int = 30):
         """繪製 進度表
 
         Args:
@@ -41,7 +41,7 @@ class Bar():
         left = self.symbol * done_symbol
         right = ' ' * (self.bar_size - done_symbol)
         # 顯示進度條
-        bar = f"\r{self.title}:[{left}{right}] {format(precent, f'.{decimal}f')}% {done}/{total} {detail}"
+        bar = f"\r{self.title}:[{left}{right}] {format(precent, f'.{decimal}f')}% {done}/{total} {detail.ljust(detail_ljust_len, ' ')}"
         return bar
 
     def done(self):
