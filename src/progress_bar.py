@@ -17,7 +17,7 @@ class Bar():
         self.symbol = symbol
         self.bar_size = bar_size
         # 迴圈內 使用
-        self.done = kwargs.get('done', 0)
+        self.done_num = kwargs.get('done', 0)
 
     def set_title(self, title: str):
         """設置標題
@@ -44,7 +44,7 @@ class Bar():
         bar = f"\r{self.title}:[{left}{right}] {format(precent, f'.{decimal}f')}% {done}/{total} {detail}"
         return bar
 
-    def __done(self):
+    def done(self):
         print()
 
 
@@ -63,17 +63,17 @@ class ProgressBar(Bar):
             in_loop (bool, optional): 建立的實體是否在迴圈內使用. Defaults to False.
         """
         if in_loop:
-            self.done += done
-            if self.done >= total:
-                self.done = total
+            self.done_num += done
+            if self.done_num >= total:
+                self.done_num = total
             if detail:
-                bar = self.print_progress_bar(self.done, total, decimal)
+                bar = self.print_progress_bar(self.done_num, total, decimal)
             else:
-                bar = self.print_progress_bar(self.done, total, decimal)
+                bar = self.print_progress_bar(self.done_num, total, decimal)
             sys.stdout.write(bar)
             sys.stdout.flush()
-            if self.done == total:
-                self.__done()
+            if self.done_num == total:
+                self.done()
         else:
             count = 0
             while True:
