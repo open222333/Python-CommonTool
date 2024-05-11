@@ -47,7 +47,8 @@ class Log():
         self.logger = logging.getLogger(self.log_name)
         self.logger.setLevel(logging.WARNING)
 
-        self.formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        self.formatter = logging.Formatter(
+            '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     def set_log_path(self, log_path: str):
         """設置log檔存放位置
@@ -107,7 +108,8 @@ class Log():
 
         self.now_time = datetime.now().__format__(date_format)
         self.log_file = os.path.join(self.log_path, f'{self.logfile_name}')
-        handler = TimedRotatingFileHandler(self.log_file, when=when, backupCount=amount)
+        handler = TimedRotatingFileHandler(
+            self.log_file, when=when, backupCount=amount)
         handler.namer = my_namer
         handler.setFormatter(self.formatter)
         if self.has_handler(handler) == False:
@@ -131,7 +133,8 @@ class Log():
             self.logfile_name = self.log_name
 
         self.log_file = os.path.join(self.log_path, f'{self.logfile_name}')
-        handler = RotatingFileHandler(self.log_file, maxBytes=size, backupCount=file_amount)
+        handler = RotatingFileHandler(
+            self.log_file, maxBytes=size, backupCount=file_amount)
         handler.setFormatter(self.formatter)
         if self.has_handler(handler) == False:
             self.logger.addHandler(handler)
@@ -207,3 +210,12 @@ class Log():
 
     def critical(self, message: str, exc_info: bool = False):
         self.logger.critical(message, exc_info=exc_info)
+
+
+class BasicLogClass():
+
+    def __init__(self, log_name: str = 'BasicLog', **kwargs) -> None:
+        log_level = kwargs.get('log_level')
+        self.logger = Log(log_name)
+        if log_level != None:
+            self.logger.set_level(log_level.upper())
