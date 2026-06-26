@@ -166,16 +166,14 @@ class Log():
         Args:
             level (str): 設定紀錄log等級 DEBUG,INFO,WARNING,ERROR,CRITICAL 預設WARNING
         """
-        if level == 'DEBUG':
-            self.logger.setLevel(logging.DEBUG)
-        elif level == 'INFO':
-            self.logger.setLevel(logging.INFO)
-        elif level == 'WARNING':
-            self.logger.setLevel(logging.WARNING)
-        elif level == 'ERROR':
-            self.logger.setLevel(logging.ERROR)
-        elif level == 'CRITICAL':
-            self.logger.setLevel(logging.CRITICAL)
+        level_map = {
+            'DEBUG': logging.DEBUG,
+            'INFO': logging.INFO,
+            'WARNING': logging.WARNING,
+            'ERROR': logging.ERROR,
+            'CRITICAL': logging.CRITICAL,
+        }
+        self.logger.setLevel(level_map.get(level, logging.WARNING))
 
     def has_handler(self, handler):
         """是否 已存在handler

@@ -41,7 +41,7 @@ Python-CommonTool/
 | `set_msg_handler()` | 輸出 log 至終端機（StreamHandler） |
 | `set_file_handler(size, file_amount)` | 輸出至檔案並依大小輪換，預設 1MB / 1 個備份 |
 | `set_date_handler(amount, when)` | 輸出至檔案並依時間輪換（S/M/H/D），預設每天保留 3 份 |
-| `set_level(level)` | 設定 log 等級：DEBUG / INFO / WARNING / ERROR / CRITICAL |
+| `set_level(level)` | 設定 log 等級：DEBUG / INFO / WARNING / ERROR / CRITICAL，未知等級回退 WARNING |
 | `set_log_path(log_path)` | 設定 log 存放目錄，預設 `logs/` |
 | `set_log_file_name(name)` | 設定 log 檔名稱，預設使用 logger 名稱 |
 | `set_log_formatter(formatter)` | 自訂 log 輸出格式 |
@@ -153,12 +153,25 @@ class MyClass(BasicLogClass):
 
 ### 引入進度條模組
 
+在迴圈內逐步更新（`in_loop=True`）：
+
 ```python
 from src.progress_bar import ProgressBar
 
-bar = ProgressBar(total=100)
-for i in range(100):
-    bar.update(i + 1)
+p = ProgressBar()
+items = ['a', 'b', 'c']
+for item in items:
+    # 處理 item ...
+    p(total=len(items), in_loop=True, detail=f'處理中: {item}')
+```
+
+一次性顯示完整進度動畫（非迴圈）：
+
+```python
+from src.progress_bar import ProgressBar
+
+p = ProgressBar()
+p(total=100)
 ```
 
 ---

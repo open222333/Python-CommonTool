@@ -88,7 +88,7 @@ class ProgressBar(Bar):
                 sys.stdout.flush()
                 if count == total:
                     break
-            self.__done()
+            self.done()
 
 
 class MutliProgressBar(Bar):
