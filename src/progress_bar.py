@@ -38,8 +38,8 @@ class Bar():
             decimal (int): 百分比顯示到後面幾位
             detail (str): 細節內容
         """
-        # 計算百分比
-        precent = float(round(100 * done / total, decimal))
+        # 計算百分比（total <= 0 視為已完成，避免除以 0）
+        precent = float(round(100 * done / total, decimal)) if total > 0 else 100.0
         done_symbol = int(precent / 100 * self.bar_size)
         left = self.symbol * done_symbol
         right = ' ' * (self.bar_size - done_symbol)
@@ -91,12 +91,50 @@ class ProgressBar(Bar):
             self.done()
 
 
-class MutliProgressBar(Bar):
+class MultiProgressBar(Bar):
+    """同時顯示多條進度條（每條一行，原地更新）。
+
+    範例：
+        bars = MultiProgressBar()
+        a = bars.add_progress('下載', total=100)
+        b = bars.add_progress('解壓', total=50)
+        bars.update(a)          # 進度 +1
+        bars.update(b, done=5)  # 進度 +5
+        bars.done()
+    """
 
     def __init__(self, symbol: str = '=', bar_size: int = 50) -> None:
         super().__init__(symbol, bar_size)
         self.progress = []
+        self._printed = False
 
-    def add_progress(self, title: str, total: int, decimal: int = 1):
-        p = {"title": title, "total": total, "decimal": decimal}
-        self.progress.append(p)
+    def add_progress(self, title: str, total: int, decimal: int = 1) -> int:
+        """新增一條進度條，回傳其索引（供 update 使用）。"""
+        self.progress.append({"title": title, "total": total, "decimal": decimal, "done": 0, "detail": ''})
+        return len(self.progress) - 1
+
+    def update(self, index: int, done: int = 1, detail: str = ''):
+        """將第 index 條進度條增加 done，並重新繪製全部進度條。"""
+        p = self.progress[index]
+        p['done'] = min(p['done'] + done, p['total'])
+        if detail:
+            p['detail'] = detail
+        self.render()
+
+    def render(self):
+        if self._printed:
+            # 游標上移回到第一條進度條
+            sys.stdout.write(f"\x1b[{len(self.progress)}F")
+        for p in self.progress:
+            self.title = p['title']
+            line = self.print_progress_bar(p['done'], p['total'], p['decimal'], p['detail'])
+            sys.stdout.write(line.lstrip('\r') + '\n')
+        sys.stdout.flush()
+        self._printed = True
+
+    def done(self):
+        pass
+
+
+# 舊名稱相容（拼字錯誤），請改用 MultiProgressBar
+MutliProgressBar = MultiProgressBar

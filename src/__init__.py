@@ -3,7 +3,7 @@ import os
 
 
 config = ConfigParser()
-config.read(os.path.join('conf', 'configig.ini'))
+config.read(os.path.join('conf', 'config.ini'))
 
 
 # logs相關參數
@@ -23,4 +23,4 @@ LOG_DAYS = config.getint('LOG', 'LOG_DAYS', fallback=7)
 if not LOG_FILE_DISABLE:
     # 建立log資料夾
     if not os.path.exists(LOG_PATH) and not LOG_DISABLE:
-        os.makedirs(LOG_PATH)
+        os.makedirs(LOG_PATH, exist_ok=True)

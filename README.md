@@ -63,6 +63,11 @@ logger.critical(message, exc_info=False)
 
 純文字 CLI 進度條，適用於批次處理任務的終端機進度顯示，無需額外相依套件。
 
+| 類別 | 說明 |
+|---|---|
+| `ProgressBar` | 單條進度條；迴圈內使用 `bar(total, in_loop=True)` |
+| `MultiProgressBar` | 多條進度條同時顯示：`idx = bars.add_progress(title, total)` → `bars.update(idx, done=1)`（舊名 `MutliProgressBar` 仍可使用） |
+
 ---
 
 ## 執行流程

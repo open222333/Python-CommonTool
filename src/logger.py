@@ -90,18 +90,27 @@ class Log():
             Returns:
                 _type_: _description_
             """
-            base_filename, ext, date = default_name.split(".")
-            return f"{base_filename}.{date}.{ext}"
+            # 預設名稱為「原檔名.時間後綴」，時間後綴一定在最後一個 . 之後
+            # （檔名本身可含 .，例如主機名稱 xxx.local）
+            base_filename, _, date = default_name.rpartition('.')
+            root, ext = os.path.splitext(base_filename)
+            if ext == '.log':
+                # app.log.2024-01-01 → app.2024-01-01.log
+                return f"{root}.{date}{ext}"
+            return default_name
 
         # 當前
+        when = when.upper()
         if when == 'S':
             date_format = '%Y-%m-%d_%H-%M-%S'
         elif when == 'M':
             date_format = '%Y-%m-%d_%H-%M'
         elif when == 'H':
             date_format = '%Y-%m-%d_%H'
-        elif when == 'D' or when == 'MIDNIGHT':
+        elif when in ('D', 'MIDNIGHT') or (len(when) == 2 and when[0] == 'W' and when[1] in '0123456'):
             date_format = '%Y-%m-%d'
+        else:
+            raise ValueError(f'when 參數無效：{when}（可用 S / M / H / D / MIDNIGHT / W0~W6）')
 
         if not self.logfile_name:
             self.logfile_name = self.log_name
